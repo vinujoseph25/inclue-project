@@ -9,9 +9,8 @@ import createMyTheme from 'library/createMyTheme';
 
 import './styles/index.scss';
 
-
 import { ErrorBoundary } from 'errorBoundary/errorBoundary';
-import { s } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 // import browserPatches from 'src/helpers/browserPatches';
 import Routes from './routes/Routes';
 import Layout from 'layout';
@@ -23,29 +22,24 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-
 const App: FunctionComponent = () => {
   const theme = createMyTheme({});
 
   //Two error boundaries are used: inner for localization and outer as a fallback
   return (
-    <ErrorBoundary>
+    <ErrorBoundary devErrorMode={process.env.NODE_ENV === 'development'}>
       <BrowserRouter>
-
         <StylesProvider injectFirst>
           <ThemeProvider theme={theme}>
             <I18N>
-
-              <ErrorBoundary>
+              <ErrorBoundary devErrorMode={process.env.NODE_ENV === 'development'}>
                 <Layout>
                   <Routes />
                 </Layout>
               </ErrorBoundary>
-
             </I18N>
           </ThemeProvider>
         </StylesProvider>
-
       </BrowserRouter>
     </ErrorBoundary>
   );

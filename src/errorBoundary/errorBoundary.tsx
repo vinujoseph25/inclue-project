@@ -5,8 +5,8 @@ import intl from 'react-intl-universal';
 export const ErrorBoundary: React.FC<{
   devErrorMode: boolean;
   children: React.ReactNode;
-}> = (props) => {
-  return <ErrorBoundaryClass devErrorMode={props.devErrorMode}>{props.children}</ErrorBoundaryClass>;
+}> = ({ children, devErrorMode = true }) => {
+  return <ErrorBoundaryClass devErrorMode={devErrorMode}>{children}</ErrorBoundaryClass>;
 };
 
 interface ErrorBoundaryClassState {
@@ -14,7 +14,7 @@ interface ErrorBoundaryClassState {
 }
 
 interface ErrorBoundaryClassProps {
-  devErrorMode: boolean; //Are we in a pre-preoduction environment? If so, we can show the stack trace.
+  devErrorMode: boolean;
   children: React.ReactNode;
 }
 

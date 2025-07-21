@@ -18,7 +18,7 @@ const Visualizer = require('webpack-visualizer-plugin');
 const styleConfig = require('./webpack.styles.config');
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
-const isLocal = process.env.NODE_ENV === "local";
+const isLocal = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 const isDev = process.env.TARGET_ENV === "DEV";
 const isQA = process.env.TARGET_ENV === "QA";
