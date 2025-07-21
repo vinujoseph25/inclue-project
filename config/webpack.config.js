@@ -92,27 +92,19 @@ module.exports = {
     static: resolveApp("public"),
     hot: true,
     allowedHosts: ['bs-local.com'],
-    onBeforeSetupMiddleware: ( devServer) => { // to be be replaced with setupMiddlewares
+  // Replace onBeforeSetupMiddleware with setupMiddlewares
+    setupMiddlewares: (middlewares, devServer) => {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+
       devServer.app.use(bodyParser.json());
       devServer.app.use(
         bodyParser.urlencoded({
           extended: true,
         }),
       );
-
-      devServer.app.post("/saml", bodyParser.json(), function (req, res) {
-        // res.send("POST res sent from webpack dev server");
-        const encodedSaml = encodeURI(req.body['SAMLResponse']);
-        let pos = 0;
-        let index = -1;
-        while (pos < encodedSaml.length) {
-          const samlCookieText = encodedSaml.substring(pos, pos + 3000);
-          res.cookie(`SAMLResponse${++index}`, samlCookieText, { maxAge: 9000000 });
-          pos += 3000;
-        }
-
-        res.redirect('/sso');
-      });
+      return middlewares;
     },
   },
   module: {
