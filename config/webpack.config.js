@@ -1,0 +1,249 @@
+"use strict";
+
+const path = require("path");
+const fs = require("fs");
+const glob = require('glob')
+
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const FixStyleEmitsWebpackPlugin = require("fix-style-emits-webpack-plugin");
+const Visualizer = require('webpack-visualizer-plugin');
+const styleConfig = require('./webpack.styles.config');
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+
+const isLocal = process.env.NODE_ENV === "local";
+const isProd = process.env.NODE_ENV === "production";
+const isDev = process.env.TARGET_ENV === "DEV";
+const isQA = process.env.TARGET_ENV === "QA";
+const isDbgViz = ("DBG_VIZ" in process.env);
+
+if (!isDbgViz) {
+  //* prevent comments for webpack stats.json *
+  console.log("isLocal " + isLocal);
+  console.log("isProd " + isProd);
+  console.log("is dev " + isDev);
+  console.log("is qa " + isQA);
+  console.log("is Proxied " + isProxied);
+}
+
+let dotenv;
+if (isLocal && isQA) {
+  dotenv = require("dotenv").config({
+    path: "./config/.env.qa",
+  });
+} else if (isLocal && isDev) {
+  dotenv = require("dotenv").config({
+    path: "./config/.env.remote",
+  });
+} else if (isProxied) {
+  dotenv = require("dotenv").config({
+    path: "./config/.env.proxy",
+  });
+} else if (isProxiediOS) {
+  dotenv = require("dotenv").config({
+    path: "./config/.env.proxy-ios",
+  });
+}
+else if (isLocal) {
+  dotenv = require("dotenv").config({
+    path: "./config/.env.local",
+  });
+}
+
+const PREFIX = "REACT_APP_";
+const ConfigReplaceToken = "{{RUNTIME_CONFIG}}";
+
+function jsBundleRuntimeConfigEnvVarsAsJSON() {
+  if (isLocal) {
+    const config = {};
+
+    Object.entries(process.env).forEach(([name, value]) => {
+      if (name.startsWith(PREFIX)) {
+        config[name.slice(PREFIX.length)] = value;
+      }
+    });
+
+    return JSON.stringify(config);
+  }
+  return ConfigReplaceToken;
+}
+
+var bodyParser = require("body-parser");
+const PATHS = {
+  src: path.join(__dirname, 'src')
+}
+
+const localHttpsCrt = isLocal ? {
+  https: {
+    key: fs.readFileSync(path.join(__dirname, '../ssl-certificate/server.key')),
+    cert: fs.readFileSync(path.join(__dirname, '../ssl-certificate/server.crt')),
+  },
+}: {};
+
+/** @type {webpack.Configuration} **/
+module.exports = {
+  entry: "./src/index.tsx",
+  mode: isLocal ? "development" : "production",
+  devtool: isLocal ? "inline-cheap-module-source-map" : "source-map", 
+  output: {
+    path: path.resolve(__dirname, "../dist"),
+    publicPath: "/",
+    filename: isLocal ? '[name].js' : '[name].[contenthash].js'
+  },
+  devServer: {
+    //host: '0.0.0.0',
+    server: 'https',
+   ...localHttpsCrt,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      }
+    },
+    static: resolveApp("public"),
+    hot: true,
+    allowedHosts: ['bs-local.com'],
+    onBeforeSetupMiddleware: ( devServer) => { // to be be replaced with setupMiddlewares
+      devServer.app.use(bodyParser.json());
+      devServer.app.use(
+        bodyParser.urlencoded({
+          extended: true,
+        }),
+      );
+
+      devServer.app.post("/saml", bodyParser.json(), function (req, res) {
+        // res.send("POST res sent from webpack dev server");
+        const encodedSaml = encodeURI(req.body['SAMLResponse']);
+        let pos = 0;
+        let index = -1;
+        while (pos < encodedSaml.length) {
+          const samlCookieText = encodedSaml.substring(pos, pos + 3000);
+          res.cookie(`SAMLResponse${++index}`, samlCookieText, { maxAge: 9000000 });
+          pos += 3000;
+        }
+
+        res.redirect('/sso');
+      });
+    },
+  },
+  module: {
+    rules: [
+      {
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: isLocal
+          }
+        },
+        test: /\.(.js|jsx|mjs|ts|tsx)$/,
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: "javascript/auto",
+      },
+      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader",
+        exclude: [/node_modules/, /build/, /__test__/],
+      },
+      ...styleConfig,
+      {
+        test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+        loader: "url-loader",
+      },
+      {
+        test: /\.html$/,
+        loader: "raw-loader",
+      },
+      {
+        test: /\index.html$/,
+        use: [
+          {
+            loader: "string-replace-loader",
+            options: {
+              search: ConfigReplaceToken,
+              replace: jsBundleRuntimeConfigEnvVarsAsJSON(),
+            },
+          },
+        ],
+      },
+    ],
+  },
+  optimization: {
+    runtimeChunk: 'single',
+    /* ...(isProd && {
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/].*\.js$/,
+            priority: 2,
+            name: 'vendor',
+            enforce: true,
+            chunks: 'all'
+          },
+          appStyles: {
+            test: (module, chunks) => module.constructor.name === 'CssModule',
+            name: "styles",
+            chunks: "all",
+            enforce: true
+          }
+        }
+      },
+      minimizer: [
+        new TerserPlugin(),
+        new CssMinimizerPlugin(),
+      ],
+    }) */
+  },
+  resolve: {
+    extensions: [".mjs", ".ts", ".tsx", ".js"],
+    modules: [path.resolve(__dirname), "node_modules", path.resolve(__dirname, "../"), path.resolve(__dirname, "../src")],
+    plugins: [new TsconfigPathsPlugin({ configFile: "tsconfig.json" })],
+    fallback: { "path": require.resolve("path-browserify") }
+  },
+  plugins: [
+    new HtmlWebPackPlugin({ template: "public/index.html", favicon: "public/favicon.ico" }),
+    new CopyWebpackPlugin({
+      patterns:[
+            { from: "src/assets", to: "public" },
+            { from: "ecosystem.config.js", to: "." },
+      ]
+    }),
+    new webpack.DefinePlugin({
+      // "process.env.TARGET_ENV": JSON.stringify(process.env.TARGET_ENV),
+      // "process.env.NODE_ENV": JSON.stringify('production'),
+      "process.env": {
+        NODE_ENV: '"' + process.env.NODE_ENV + '"',
+        TARGET_ENV: '"' + process.env.TARGET_ENV + '"',
+        ...(process.env.USE_CPTURL && { USE_CPTURL: process.env.USE_CPTURL }),
+      },
+    }),
+    new WebpackManifestPlugin(),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /de|en-*/),
+    new MiniCssExtractPlugin({
+      filename: isLocal ? "[name].css" : "[name].[hash].css",
+      ignoreOrder: true,
+    }),
+    /* this solves outstanding issue of emtpy styles.js produced by webpack https://github.com/webpack/webpack/issues/7300#issuecomment-801549832 */
+    new FixStyleEmitsWebpackPlugin([]),
+    new NodePolyfillPlugin()
+  ]
+};
+
+if (isDbgViz) {
+  module.exports.plugins.push(new Visualizer({
+    filename: './dbg-viz.html'
+  }));
+}

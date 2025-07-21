@@ -1,0 +1,31 @@
+
+h3 {
+    font-size: 1.5rem;
+    margin: .5rem 0;
+}
+
+.MuiFormLabel-asterisk{
+  color: $red-400;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
+@keyframes onAutoFillStart {  from {/**/}  to {/**/}}
+@keyframes onAutoFillCancel {  from {/**/}  to {/**/}}
+input:-webkit-autofill {
+  // Expose a hook for JavaScript when autofill is shown
+  // JavaScript can capture 'animationstart' events
+  animation-name: onAutoFillStart;
+}
+
+input:not(:-webkit-autofill) {
+  // Expose a hook for JS onAutoFillCancel
+  // JavaScript can capture 'animationstart' events
+  animation-name: onAutoFillCancel;
+}
+

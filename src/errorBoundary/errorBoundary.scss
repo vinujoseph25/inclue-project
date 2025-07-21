@@ -1,0 +1,14 @@
+.errorNotice{
+  display: flex;
+  flex-direction: column;
+  padding-left: rem-calc(30);
+  b{
+    font-size: rem-calc(20);
+  }
+  span{
+    font-size: rem-calc(16);
+  }
+  .error{
+    color: rgb(189, 0, 0);
+  }
+}

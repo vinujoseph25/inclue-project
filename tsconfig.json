@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "ES5",
+    "jsx": "react",
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "alwaysStrict": false,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "incremental": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src",
+    "custom.d.ts",
+    "botframework-webchat.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

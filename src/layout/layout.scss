@@ -1,0 +1,98 @@
+$break-small: 320px;
+$break-large: 1200px;
+$nav-drawer-width: 256px;
+$nav-drawer-collapsed-width: rem-calc(72);
+
+html {
+  width: 100%;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  outline: none;
+}
+
+#root {
+  background-color: $white;
+  color: $black;
+}
+
+#content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+body.persistent-menu-open {
+  .content-container {
+  }
+
+  .header-container {
+  }
+}
+
+.content-container-persistent-menu-close {
+  margin-left: 65px !important;
+  width: calc(100% - 65px) !important;
+  max-width: 100% !important;
+
+  @include breakpoint(mdMax, true) {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@mixin container-main {
+  height: 100%;
+
+  &.lock-navigation {
+    padding: 0;
+    margin: auto;
+  }
+
+  &.content-dont-center {
+    margin: unset;
+  }
+
+  &.max-width {
+    max-width: 100%;
+  }
+}
+
+.content-container {
+  @include container-main();
+
+  max-width: 100% !important;
+  margin-left: rem-calc(65) !important;
+
+  @include breakpoint(mdMax, true) {
+    min-width: 100%;
+    margin-left: 0 !important;
+  }
+
+  @include breakpoint(xlMax) {
+    max-width: inherit;
+  }
+
+  &.content-container-case-instance {
+    margin-left: 0rem !important;
+  }
+}
+
+.content-container-ms {
+  @include container-main();
+
+  @include breakpoint(mdMax, true) {
+    width: 100%;
+  }
+
+  margin: auto;
+}

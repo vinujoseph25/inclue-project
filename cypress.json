@@ -1,0 +1,13 @@
+{
+  "projectId": "4b7344",
+  "reporter": "junit",
+  "video": false,
+  "experimentalFetchPolyfill": true,
+  "chromeWebSecurity": false,
+  "requestTimeout": 15000,
+  "reporterOptions": {
+    "mochaFile": "cypress/test-results/test-output-[hash].xml",
+    "toConsole": true,
+    "attachments": true
+  }
+}
