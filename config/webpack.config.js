@@ -13,7 +13,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
-const FixStyleEmitsWebpackPlugin = require("fix-style-emits-webpack-plugin");
+const WebpackRemoveEmptyScripts = require('webpack-remove-empty-scripts');
 const Visualizer = require('webpack-visualizer-plugin');
 const styleConfig = require('./webpack.styles.config');
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
@@ -30,7 +30,6 @@ if (!isDbgViz) {
   console.log("isProd " + isProd);
   console.log("is dev " + isDev);
   console.log("is qa " + isQA);
-  console.log("is Proxied " + isProxied);
 }
 
 let dotenv;
@@ -41,14 +40,6 @@ if (isLocal && isQA) {
 } else if (isLocal && isDev) {
   dotenv = require("dotenv").config({
     path: "./config/.env.remote",
-  });
-} else if (isProxied) {
-  dotenv = require("dotenv").config({
-    path: "./config/.env.proxy",
-  });
-} else if (isProxiediOS) {
-  dotenv = require("dotenv").config({
-    path: "./config/.env.proxy-ios",
   });
 }
 else if (isLocal) {
@@ -80,11 +71,8 @@ const PATHS = {
   src: path.join(__dirname, 'src')
 }
 
-const localHttpsCrt = isLocal ? {
-  https: {
-    key: fs.readFileSync(path.join(__dirname, '../ssl-certificate/server.key')),
-    cert: fs.readFileSync(path.join(__dirname, '../ssl-certificate/server.crt')),
-  },
+const localHttpCrt = isLocal ? {
+  http: {},
 }: {};
 
 /** @type {webpack.Configuration} **/
@@ -99,8 +87,8 @@ module.exports = {
   },
   devServer: {
     //host: '0.0.0.0',
-    server: 'https',
-   ...localHttpsCrt,
+    server: 'http',
+   ...localHttpCrt,
     client: {
       overlay: {
         errors: true,
@@ -236,8 +224,7 @@ module.exports = {
       filename: isLocal ? "[name].css" : "[name].[hash].css",
       ignoreOrder: true,
     }),
-    /* this solves outstanding issue of emtpy styles.js produced by webpack https://github.com/webpack/webpack/issues/7300#issuecomment-801549832 */
-    new FixStyleEmitsWebpackPlugin([]),
+    new WebpackRemoveEmptyScripts(),
     new NodePolyfillPlugin()
   ]
 };
