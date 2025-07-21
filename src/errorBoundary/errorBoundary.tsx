@@ -21,7 +21,7 @@ interface ErrorBoundaryClassProps {
 const defaultState: ErrorBoundaryClassState = {};
 
 class ErrorBoundaryClass extends React.Component<ErrorBoundaryClassProps, ErrorBoundaryClassState> {
-  constructor(props) {
+  constructor(props: ErrorBoundaryClassProps) {
     super(props);
     this.state = defaultState;
   }

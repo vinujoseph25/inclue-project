@@ -1,18 +1,20 @@
-import React, {  } from 'react';
+import React from 'react';
 import Header from './Header/Header';
 import Body from './Body';
 import Footer from './Footer';
 import './layout.scss';
 
-export default function Layout({ headerName = '', children }) {
+interface LayoutProps {
+  headerName?: string;
+  children: React.ReactNode;
+}
 
+export default function Layout({ headerName = '', children }: LayoutProps) {
   return (
-      <>
-        <Header/>
-        <Body>
-          {children}
-        </Body>
-        <Footer />
-      </>
+    <>
+      <Header />
+      <Body>{children}</Body>
+      <Footer />
+    </>
   );
 }
