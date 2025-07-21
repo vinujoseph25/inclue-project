@@ -71,10 +71,6 @@ const PATHS = {
   src: path.join(__dirname, 'src')
 }
 
-const localHttpCrt = isLocal ? {
-  http: {},
-}: {};
-
 /** @type {webpack.Configuration} **/
 module.exports = {
   entry: "./src/index.tsx",
@@ -86,9 +82,7 @@ module.exports = {
     filename: isLocal ? '[name].js' : '[name].[contenthash].js'
   },
   devServer: {
-    //host: '0.0.0.0',
     server: 'http',
-   ...localHttpCrt,
     client: {
       overlay: {
         errors: true,
@@ -207,6 +201,12 @@ module.exports = {
       patterns:[
             { from: "src/assets", to: "public" },
             { from: "ecosystem.config.js", to: "." },
+      ]
+    }),
+    new CopyWebpackPlugin({
+      patterns:[
+            { from: "src/assets", to: "public", noErrorOnMissing: true },
+            { from: "ecosystem.config.js", to: ".", noErrorOnMissing: true },
       ]
     }),
     new webpack.DefinePlugin({

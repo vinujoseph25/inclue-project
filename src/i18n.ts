@@ -1,7 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { LANGUAGES } from './constants/constants';
-import { UserContext } from './contexts/UserProvider';
 import PropTypes from 'prop-types';
 
 const locales = {
@@ -9,8 +8,11 @@ const locales = {
   [LANGUAGES.DE_DE]: require('./locales/de-DE.json'),
 };
 
-class I18N extends React.Component {
-  static contextType = UserContext;
+interface I18NProps {
+  children?: React.ReactNode;
+}
+
+class I18N extends React.Component<I18NProps> {
   i18n: any;
   state = {
     initDone: false,
@@ -38,7 +40,7 @@ class I18N extends React.Component {
     this.setLanguage(LANGUAGES.EN_US);
   }
   componentDidUpdate() {
-    const lang = this.context.language;
+    const lang = LANGUAGES.EN_US;
     if (this.state.language !== lang) {
       this.setLanguage(lang);
       this.setState(

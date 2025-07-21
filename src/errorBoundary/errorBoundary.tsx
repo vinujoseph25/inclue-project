@@ -1,13 +1,12 @@
 import React from 'react';
 import './errorBoundary.scss';
 import intl from 'react-intl-universal';
-import en_us from '../locales/en-US.json';
-import { getRuntimeConfig } from 'helpers';
-import { useAzureAppConfig } from 'contexts/AzureAppConfigProvider';
 
-export const ErrorBoundary: React.FC = (props) => {
-  const devErrorMode = useAzureAppConfig('DevErrorMode') === 'true';
-  return <ErrorBoundaryClass {...{ devErrorMode }}>{props.children}</ErrorBoundaryClass>;
+export const ErrorBoundary: React.FC<{
+  devErrorMode: boolean;
+  children: React.ReactNode;
+}> = (props) => {
+  return <ErrorBoundaryClass devErrorMode={props.devErrorMode}>{props.children}</ErrorBoundaryClass>;
 };
 
 interface ErrorBoundaryClassState {
@@ -16,6 +15,7 @@ interface ErrorBoundaryClassState {
 
 interface ErrorBoundaryClassProps {
   devErrorMode: boolean; //Are we in a pre-preoduction environment? If so, we can show the stack trace.
+  children: React.ReactNode;
 }
 
 const defaultState: ErrorBoundaryClassState = {};
@@ -53,12 +53,10 @@ interface ErrorNoticeProps {
 }
 
 const ErrorNotice: React.FC<ErrorNoticeProps> = (props) => {
-  const supportEmail = React.useMemo(() => getRuntimeConfig().supportEmail, []);
-
   //if the locale is not loaded just default to en-US
-  const header = intlWithFallback('errorBoundary.header', en_us.errorBoundary.header);
-  const nextSteps = intlWithFallback('errorBoundary.nextSteps', en_us.errorBoundary.nextSteps);
-  const support = `${intlWithFallback('errorBoundary.support', en_us.errorBoundary.support)} ${supportEmail}.`;
+  const header = intlWithFallback('errorBoundary.header', 'header');
+  const nextSteps = intlWithFallback('errorBoundary.nextSteps', 'next steps');
+  const support = `${intlWithFallback('errorBoundary.support', 'support email')}`;
 
   return (
     <div className="errorNotice">
