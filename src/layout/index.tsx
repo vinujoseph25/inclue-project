@@ -1,5 +1,6 @@
 import React from 'react';
-import Header from './Header/Header';
+import Menu from './Menu';
+import Header from './Header';
 import Body from './Body';
 import Footer from './Footer';
 import './layout.scss';
@@ -12,6 +13,7 @@ interface LayoutProps {
 export default function Layout({ headerName = '', children }: LayoutProps) {
   return (
     <>
+      <Menu />
       <Header />
       <Body>{children}</Body>
       <Footer />

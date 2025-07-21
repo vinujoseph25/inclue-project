@@ -20,21 +20,24 @@ const Body: React.FC<BodyProps> = ({ children }) => {
   });
 
   const containerClass = classNames({
-    'content-container': true
+    'content-container': true,
   });
 
   return (
-    <div id="viewport" className={viewportClass}>
-      <div id="kpi-portal" />
-      <div id="viewport-content">
-        {"Menu"}
-        <div id="content">
-          <Container className={containerClass} disableGutters>
-            {/* {"Body"} */}
-            {children}
-          </Container>
-        </div>
-      </div>
+    <div
+      id="viewport"
+      className={viewportClass}
+      style={{
+        display: 'flex',
+        padding: '1rem',
+        textAlign: 'center',
+        background: '#ebe0e0ff',
+        height: '100vh',
+      }}
+    >
+      <Container className={containerClass} disableGutters>
+        {children}
+      </Container>
     </div>
   );
 };
