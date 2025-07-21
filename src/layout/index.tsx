@@ -12,11 +12,15 @@ interface LayoutProps {
 
 export default function Layout({ headerName = '', children }: LayoutProps) {
   return (
-    <>
-      <Menu />
-      <Header />
-      <Body>{children}</Body>
-      <Footer />
-    </>
+    <div style={{ display: 'flex' }}>
+      <div className="side-menu">
+        <Menu />
+      </div>
+      <div className="content" style={{ flex: 1 }}>
+        <Header />
+        <Body>{children}</Body>
+        <Footer />
+      </div>
+    </div>
   );
 }

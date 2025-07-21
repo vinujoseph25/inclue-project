@@ -12,10 +12,7 @@ const Menu: React.FC = () => {
     <aside
       style={{
         width: 220,
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        top: 0,
+        height: '100%',
         background: '#f5f6fa',
         borderRight: '1px solid #e1e1e1',
         display: 'flex',
