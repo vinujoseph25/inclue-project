@@ -1,5 +1,162 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
 
+// Extend the Theme interface to include custom colors
+declare module '@mui/material/styles' {
+  interface Theme {
+    colors: {
+      black: string;
+      white: string;
+      green: string;
+      blue: string;
+      red: string;
+      orange: string;
+      purple: string;
+      yellow1: string;
+      limeGreen: string;
+      algaeGreen: string;
+      pastelGreen: string;
+      emerald: string;
+      forestGreen: string;
+      jewel: string;
+      darkJewel: string;
+      teal: string;
+      iceCold: string;
+      turquoise: string;
+      puertoRico: string;
+      blueChill: string;
+      pacificOcean: string;
+      sherpaBlue: string;
+      jordyBlue: string;
+      pictonBlue: string;
+      vividBlue: string;
+      darkPictonBlue: string;
+      denim: string;
+      deepSapphire: string;
+      lilac: string;
+      fuchsia: string;
+      kazoo: string;
+      arapawa: string;
+      darkArapawa: string;
+      haiti: string;
+      maroon: string;
+      viola: string;
+      mulberry: string;
+      plum: string;
+      loulou: string;
+      wineberry: string;
+      jon: string;
+      monaLisa: string;
+      bitterSweet: string;
+      carnation: string;
+      cinnabar: string;
+      thunderbird: string;
+      darkTan: string;
+      koromiko: string;
+      neonCarrot: string;
+      flamenco: string;
+      blazeOrange: string;
+      trinidad: string;
+      fire: string;
+      lemonChiffon: string;
+      picasso: string;
+      bumblee: string;
+      sunflower: string;
+      eyConfidentGrey: string;
+      eyGrey0: string;
+      eyGrey1: string;
+      eyGrey2: string;
+      eyGrey3: string;
+      eyGrey4: string;
+      eyGrey5: string;
+      eyGrey6: string;
+      eyGrey7: string;
+      eyGrey8: string;
+      eyGrey9: string;
+      eyGrey10: string;
+      eyYellow: string;
+      eyInteractiveOverlays: string;
+      greyBlue: string;
+    };
+  }
+
+  interface ThemeOptions {
+    colors?: {
+      black?: string;
+      white?: string;
+      green?: string;
+      blue?: string;
+      red?: string;
+      orange?: string;
+      purple?: string;
+      yellow1?: string;
+      limeGreen?: string;
+      algaeGreen?: string;
+      pastelGreen?: string;
+      emerald?: string;
+      forestGreen?: string;
+      jewel?: string;
+      darkJewel?: string;
+      teal?: string;
+      iceCold?: string;
+      turquoise?: string;
+      puertoRico?: string;
+      blueChill?: string;
+      pacificOcean?: string;
+      sherpaBlue?: string;
+      jordyBlue?: string;
+      pictonBlue?: string;
+      vividBlue?: string;
+      darkPictonBlue?: string;
+      denim?: string;
+      deepSapphire?: string;
+      lilac?: string;
+      fuchsia?: string;
+      kazoo?: string;
+      arapawa?: string;
+      darkArapawa?: string;
+      haiti?: string;
+      maroon?: string;
+      viola?: string;
+      mulberry?: string;
+      plum?: string;
+      loulou?: string;
+      wineberry?: string;
+      jon?: string;
+      monaLisa?: string;
+      bitterSweet?: string;
+      carnation?: string;
+      cinnabar?: string;
+      thunderbird?: string;
+      darkTan?: string;
+      koromiko?: string;
+      neonCarrot?: string;
+      flamenco?: string;
+      blazeOrange?: string;
+      trinidad?: string;
+      fire?: string;
+      lemonChiffon?: string;
+      picasso?: string;
+      bumblee?: string;
+      sunflower?: string;
+      eyConfidentGrey?: string;
+      eyGrey0?: string;
+      eyGrey1?: string;
+      eyGrey2?: string;
+      eyGrey3?: string;
+      eyGrey4?: string;
+      eyGrey5?: string;
+      eyGrey6?: string;
+      eyGrey7?: string;
+      eyGrey8?: string;
+      eyGrey9?: string;
+      eyGrey10?: string;
+      eyYellow?: string;
+      eyInteractiveOverlays?: string;
+      greyBlue?: string;
+    };
+  }
+}
+
 export default function createMyTheme(options: ThemeOptions) {
   return createTheme({
     colors: {
@@ -27,7 +184,7 @@ export default function createMyTheme(options: ThemeOptions) {
       sherpaBlue: '#004F4f',
       jordyBlue: '#87D3F2',
       pictonBlue: '#4EBEEB',
-      vididBlue: '#188BE5',
+      vividBlue: '#188BE5',
       darkPictonBlue: '#35A4EB',
       denim: '#1777CF',
       deepSapphire: '#082C65',
