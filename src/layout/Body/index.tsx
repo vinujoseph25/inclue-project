@@ -1,22 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Container } from '@mui/material';
-
-const isIPhone = /iPhone/.test(navigator.userAgent);
-
-const ariaProps = !!isIPhone
-  ? {}
-  : {
-      tabIndex: -1,
-    };
-
 interface BodyProps {
   children: React.ReactNode;
 }
 
 const Body: React.FC<BodyProps> = ({ children }) => {
-  const viewportClass = classNames({
-    viewport: true,
+  const contentClass = classNames({
+    content: true,
   });
 
   const containerClass = classNames({
@@ -24,17 +15,7 @@ const Body: React.FC<BodyProps> = ({ children }) => {
   });
 
   return (
-    <div
-      id="viewport"
-      className={viewportClass}
-      style={{
-        display: 'flex',
-        padding: '1rem',
-        textAlign: 'center',
-        background: '#ebe0e0ff',
-        height: '100vh',
-      }}
-    >
+    <div id="content" className={contentClass}>
       <Container className={containerClass} disableGutters>
         {children}
       </Container>

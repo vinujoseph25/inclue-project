@@ -26,73 +26,49 @@ body {
 }
 
 #content {
-  height: 100%;
+  height: 100vh;
   width: 100%;
   display: flex;
 }
 
-body.persistent-menu-open {
-  .content-container {
-  }
-
-  .header-container {
-  }
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px; /* Ensure width is set */
+  height: 100vh;
+  z-index: 1000;
+  overflow-y: auto; /* Allow scrolling within the menu if content is too long */
+  background: #f5f6fa;
+  border-right: 1px solid #e1e1e1;
 }
 
-.content-container-persistent-menu-close {
-  margin-left: 65px !important;
-  width: calc(100% - 65px) !important;
-  max-width: 100% !important;
-
-  @include breakpoint(mdMax, true) {
-    margin-left: 0 !important;
-    width: 100% !important;
-  }
+/* Update the main content area to account for the fixed menu */
+.main-content {
+  margin-left: 220px; /* Match your menu width */
+  min-height: 100vh;
+  width: calc(100% - 220px); /* Ensure proper width calculation */
 }
 
-@mixin container-main {
-  height: 100%;
-
-  &.lock-navigation {
-    padding: 0;
-    margin: auto;
-  }
-
-  &.content-dont-center {
-    margin: unset;
-  }
-
-  &.max-width {
-    max-width: 100%;
-  }
+/* Make sure header also respects the sidebar */
+.header-container {
+  margin-left: 220px;
+  width: calc(100% - 220px);
 }
 
-.content-container {
-  @include container-main();
-
-  max-width: 100% !important;
-  margin-left: rem-calc(65) !important;
-
-  @include breakpoint(mdMax, true) {
-    min-width: 100%;
-    margin-left: 0 !important;
+/* For responsive design - hide menu on smaller screens */
+@media (max-width: 768px) {
+  .side-menu {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-
-  @include breakpoint(xlMax) {
-    max-width: inherit;
+  
+  .side-menu.open {
+    transform: translateX(0);
   }
-
-  &.content-container-case-instance {
-    margin-left: 0rem !important;
+  
+  .main-content {
+    margin-left: 0;
+    width: calc(100%);
   }
-}
-
-.content-container-ms {
-  @include container-main();
-
-  @include breakpoint(mdMax, true) {
-    width: 100%;
-  }
-
-  margin: auto;
 }
