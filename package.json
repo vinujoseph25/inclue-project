@@ -1,6 +1,6 @@
 {
   "name": "inclue-project",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Inclue",
   "main": "index.tsx",
   "scripts": {
@@ -15,7 +15,7 @@
     "test:watch": "jest --watch --maxWorkers=1 --config ./config/jest.config.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "vinu.joseph@inclue.com",
   "license": "ISC",
   "dependencies": {
     "@emotion/react": "^11.14.0",
