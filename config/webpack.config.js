@@ -191,14 +191,7 @@ module.exports = {
     new HtmlWebPackPlugin({ template: "public/index.html", favicon: "public/favicon.ico" }),
     new CopyWebpackPlugin({
       patterns:[
-            { from: "src/assets", to: "public" },
-            { from: "ecosystem.config.js", to: "." },
-      ]
-    }),
-    new CopyWebpackPlugin({
-      patterns:[
-            { from: "src/assets", to: "public", noErrorOnMissing: true },
-            { from: "ecosystem.config.js", to: ".", noErrorOnMissing: true },
+            { from: "src/assets", to: "public", noErrorOnMissing: true }
       ]
     }),
     new webpack.DefinePlugin({
